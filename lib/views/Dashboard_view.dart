@@ -1,6 +1,11 @@
 import 'package:busify_gerant/Widgets/SimpleAlertDialog.dart';
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
+import 'package:busify_gerant/models/Bus_model.dart';
+import 'package:busify_gerant/models/Driver_model.dart';
+import 'package:busify_gerant/views/BusInfos_view.dart';
+import 'package:busify_gerant/views/DriverInfos_view.dart';
+import 'package:busify_gerant/views/LineInfos_view.dart';
 import 'package:busify_gerant/views/newAccount_views/AddLine_view.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
@@ -131,7 +136,8 @@ class _DashboardViewState extends State<DashboardView> {
                                 "nom" : "",
                                 "matricule" : "",
                                 "marque" : "",
-                                "line" : ""
+                                "line" : "",
+                                "activity" : "0"
                             },
                             "driver" : {
                                 "nom" : "",
@@ -257,68 +263,145 @@ class _DashboardViewState extends State<DashboardView> {
                          // ! Bus
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Icon(
-                                        CupertinoIcons.bus,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 50,
-                                      ),
-                                    ),
-
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[0]["title"]),
-                                          subtitle: Text(data[0]["subtitle"]),
+                            child: InkWell(
+                              onTap: () async {
+                    
+                                setState(() {
+                                  loading = true;
+                                });
+                    
+                                debugPrint(data[1]["title"]);
+                    
+                                Map<String, dynamic> json = {
+                                  "webId" : prefs!.getString('webId') 
+                                };
+                    
+                                Bus bus = await busController.getBus(json).whenComplete(() {
+                                  Future.delayed(
+                                    const Duration(seconds: 1),
+                                    (){
+                                      setState(() {
+                                    loading = false;
+                                  });
+                                    }
+                                  );
+                                  
+                                });
+                    
+                                debugPrint("Le bus arrive");
+                                debugPrint(bus.toString());
+                                
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => BusInfos(bus: bus))
+                                );
+                    
+                        
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: Hero(
+                                          tag : 'bus',
+                                          child: Icon(
+                                            CupertinoIcons.bus,
+                                            color: Theme.of(context).primaryColor,
+                                            size: 50,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                            
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[0]["title"]),
+                                            subtitle: Text(data[0]["subtitle"]),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
                           
                           // ! Driver
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Icon(
-                                        CupertinoIcons.person_fill,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 50,
-                                      ),
-                                    ),
-
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[1]["title"]),
-                                          subtitle: Text(data[1]["subtitle"]),
+                            child: InkWell(
+                              onTap: () async {
+                                setState(() {
+                                  loading = true;
+                                });
+                    
+                                debugPrint(data[2]["title"]);
+                    
+                                Map<String, dynamic> json = {
+                                  "webId" : prefs!.getString('webId') 
+                                };
+                    
+                                Driver driver = await drController.getDriver(json).whenComplete(() {
+                                  Future.delayed(
+                                    const Duration(seconds: 1),
+                                    (){
+                                      setState(() {
+                                    loading = false;
+                                  });
+                                    }
+                                  );
+                                  
+                                });
+                    
+                                debugPrint(driver.toString());
+                                
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => DriverInfo(driver: driver))
+                                );
+                    
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: Hero(
+                                          tag: 'driver',
+                                          child: Icon(
+                                            CupertinoIcons.person_fill,
+                                            color: Theme.of(context).primaryColor,
+                                            size: 50,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                            
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[1]["title"]),
+                                            subtitle: Text(data[1]["subtitle"]),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
                         ],
@@ -338,37 +421,51 @@ class _DashboardViewState extends State<DashboardView> {
                           // ! LINE
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Hero(
-                                        tag: 'line',
-                                        child: Icon(
-                                          Icons.roundabout_right_rounded,
-                                          color: Theme.of(context).primaryColor,
-                                          size: 50,
+                            child: InkWell(
+                              onTap: (){
+                                debugPrint(data[3]["title"]);
+
+                                int? line = prefs!.getInt("line");
+
+                                print("Ligne = ${line.toString()}");
+
+                                Navigator.push(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => LineInfos(line: line!) )
+                                );
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: Hero(
+                                          tag: 'line',
+                                          child: Icon(
+                                            Icons.roundabout_right_rounded,
+                                            color: Theme.of(context).primaryColor,
+                                            size: 50,
+                                          ),
                                         ),
                                       ),
-                                    ),
-    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[2]["title"]),
-                                          subtitle: Text(data[2]["subtitle"]),
+                                
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[2]["title"]),
+                                            subtitle: Text(data[2]["subtitle"]),
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
     

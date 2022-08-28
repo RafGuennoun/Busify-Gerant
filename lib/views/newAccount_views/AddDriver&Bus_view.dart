@@ -5,6 +5,7 @@ import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Widgets/SimpleAlertDialog.dart';
 
@@ -17,6 +18,18 @@ class AddDriverAndBus extends StatefulWidget {
 }
 
 class _AddDriverAndBusState extends State<AddDriverAndBus> {
+
+  SharedPreferences? prefs;
+
+  Future initPrefs() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  initState(){
+    initPrefs();
+    super.initState();
+  }
 
   BusController busController = BusController();
   DriverController driverController = DriverController();
@@ -39,11 +52,6 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
     _busController.dispose();
     _marqueController.dispose();
     _matriculeController.dispose();
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   DateTime selectedDate = DateTime.now();
@@ -342,7 +350,8 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                             "nom" : _busController.text,
                             "marque" : _marqueController.text,
                             "matricule" : _matriculeController.text,
-                            "line" : widget.data["ligne"]
+                            "line" : widget.data["ligne"],
+                            "activity" : "0",
                           }
                         };
 
@@ -353,6 +362,8 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                             });
                           });  
                         });
+
+                        prefs!.setBool('bus', true);
 
                         // ignore: use_build_context_synchronously
                         Navigator.pushAndRemoveUntil(
@@ -365,7 +376,6 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                           "Felicitations", 
                           "Vous avez rejoint notre application."
                         );
-
                         
                       }
 

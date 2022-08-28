@@ -1,8 +1,11 @@
+import 'package:busify_gerant/Widgets/SimpleAlertDialog.dart';
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
+import 'package:busify_gerant/views/newAccount_views/AddLine_view.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -36,6 +39,15 @@ class _DashboardViewState extends State<DashboardView> {
 
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+
+    void showSimpleDialog(String title, String content){
+      showCupertinoDialog(
+        context: context,
+        builder: (context) {
+          return SimpleAlertDialog(title: title, content: content,);
+        },
+      );
+    }
 
 
     List data = [
@@ -77,6 +89,102 @@ class _DashboardViewState extends State<DashboardView> {
           title: const Text("Busify Gérant"),
           centerTitle: true,
           actions: [
+
+            IconButton(
+              icon: const Icon(
+                Icons.add_box_outlined
+              ),
+              onPressed: () async {
+
+                bool hasInternet = await InternetConnectionChecker().hasConnection;
+
+                if (hasInternet) {
+
+                  showCupertinoDialog(
+                  context: context, 
+                  builder: (context)=> CupertinoAlertDialog(
+                    title: const Text("Rejoindre le reseau"),
+                    content: const Text("Attention, si vous avez déja un bus toutes vos données vont etres réinitialisées"),
+                    actions: [
+                      CupertinoDialogAction(
+                        child: Text(
+                          "Rejoindre",
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onPressed: () async {
+                          print("Add new bus");
+
+                          Map<String, dynamic> authData = {
+                            "idp" : "https://solidcommunity.net",
+                            "username" : "bus1",
+                            "password" : "bus1123456" 
+                          };
+
+                          Map<String, dynamic> initFiles = {
+                            "login" :  {
+                                "idp" : "https://solidcommunity.net",
+                                "username" : "bus1",
+                                "password" : "bus1123456" 
+                            },
+                            "webId" : "https://bus1.solidcommunity.net",
+                            "bus" : {
+                                "nom" : "",
+                                "matricule" : "",
+                                "marque" : "",
+                                "line" : ""
+                            },
+                            "driver" : {
+                                "nom" : "",
+                                "prenom" : "",
+                                "birthday" : "",
+                                "id" : ""
+                            },
+                            "location" : {
+                                "lat" : "36.7113",
+                                "lon" : "3.18171",
+                                "track" : ""  
+                            }
+                          };
+
+                          await busController.init(initFiles);
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+
+                          // ignore: use_build_context_synchronously
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: ((context) => AddLine(authData: authData))),
+                          );
+
+
+                          
+                        }
+                      ),
+                      CupertinoDialogAction(
+                        child: Text(
+                          "Annuler",
+                          style: TextStyle(color: Theme.of(context).primaryColor),
+                        ),
+                        onPressed: (){
+                          Navigator.pop(context);
+                        }
+                      ),
+                    ],
+                  )
+                );
+                
+                } else {
+                  showSimpleDialog(
+                    "Oups !", 
+                    "Verifiez votre connexion internet."
+                  );
+                }
+               
+
+              },
+            ),
+
             IconButton(
               icon: const Icon(
                 Icons.logout_rounded

@@ -1,10 +1,10 @@
+import 'package:busify_gerant/Utils/constants.dart';
 import 'package:busify_gerant/controllers/Relation_controller.dart';
 import 'package:busify_gerant/models/Node_model.dart';
 import 'package:dio/dio.dart';
 
-import '../Utils/constants.dart';
 
-class NodeRepository {
+class NodeController {
 
   final String osm = Constants().getNodeOSM();
 

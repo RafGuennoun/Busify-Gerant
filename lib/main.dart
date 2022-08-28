@@ -1,3 +1,4 @@
+import 'package:busify_gerant/views/Home_view.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -9,9 +10,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Busify-Gérant',
-      home: Container(),
+      home: HomeView(),
     );
   }
 }

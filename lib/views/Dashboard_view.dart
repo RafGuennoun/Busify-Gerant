@@ -15,7 +15,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 class DashboardView extends StatefulWidget {
-  const DashboardView({Key? key}) : super(key: key);
+  final SharedPreferences prefs;
+  const DashboardView({required this.prefs});
 
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -30,6 +31,7 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   bool loading = false;
+
   @override
   initState(){
     initPrefs();
@@ -265,37 +267,46 @@ class _DashboardViewState extends State<DashboardView> {
                             flex: 1,
                             child: InkWell(
                               onTap: () async {
-                    
-                                setState(() {
-                                  loading = true;
-                                });
-                    
-                                debugPrint(data[1]["title"]);
-                    
-                                Map<String, dynamic> json = {
-                                  "webId" : prefs!.getString('webId') 
-                                };
-                    
-                                Bus bus = await busController.getBus(json).whenComplete(() {
-                                  Future.delayed(
-                                    const Duration(seconds: 1),
-                                    (){
-                                      setState(() {
-                                    loading = false;
-                                  });
-                                    }
+
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
                                   );
+                                } else {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                      
+                                  debugPrint(data[1]["title"]);
+                      
+                                  Map<String, dynamic> json = {
+                                    "webId" : prefs!.getString('webId') 
+                                  };
+                      
+                                  Bus bus = await busController.getBus(json).whenComplete(() {
+                                    Future.delayed(
+                                      const Duration(seconds: 1),
+                                      (){
+                                        setState(() {
+                                      loading = false;
+                                    });
+                                      }
+                                    );
+                                    
+                                  });
+                      
+                                  debugPrint("Le bus arrive");
+                                  debugPrint(bus.toString());
                                   
-                                });
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => BusInfos(bus: bus))
+                                  );
+                                }
                     
-                                debugPrint("Le bus arrive");
-                                debugPrint(bus.toString());
                                 
-                                // ignore: use_build_context_synchronously
-                                Navigator.push(
-                                  context, 
-                                  MaterialPageRoute(builder: (context) => BusInfos(bus: bus))
-                                );
                     
                         
                               },
@@ -339,35 +350,45 @@ class _DashboardViewState extends State<DashboardView> {
                             flex: 1,
                             child: InkWell(
                               onTap: () async {
-                                setState(() {
-                                  loading = true;
-                                });
-                    
-                                debugPrint(data[2]["title"]);
-                    
-                                Map<String, dynamic> json = {
-                                  "webId" : prefs!.getString('webId') 
-                                };
-                    
-                                Driver driver = await drController.getDriver(json).whenComplete(() {
-                                  Future.delayed(
-                                    const Duration(seconds: 1),
-                                    (){
-                                      setState(() {
-                                    loading = false;
-                                  });
-                                    }
-                                  );
-                                  
-                                });
-                    
-                                debugPrint(driver.toString());
                                 
-                                // ignore: use_build_context_synchronously
-                                Navigator.push(
-                                  context, 
-                                  MaterialPageRoute(builder: (context) => DriverInfo(driver: driver))
-                                );
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
+                                  );
+                                } else {
+                                  setState(() {
+                                    loading = true;
+                                  });
+                      
+                                  debugPrint(data[2]["title"]);
+                      
+                                  Map<String, dynamic> json = {
+                                    "webId" : prefs!.getString('webId') 
+                                  };
+                      
+                                  Driver driver = await drController.getDriver(json).whenComplete(() {
+                                    Future.delayed(
+                                      const Duration(seconds: 1),
+                                      (){
+                                        setState(() {
+                                      loading = false;
+                                    });
+                                      }
+                                    );
+                                    
+                                  });
+                      
+                                  debugPrint(driver.toString());
+                                  
+                                  // ignore: use_build_context_synchronously
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => DriverInfo(driver: driver))
+                                  );
+                                }
+
+                                
                     
                               },
                               child: Card(
@@ -423,16 +444,27 @@ class _DashboardViewState extends State<DashboardView> {
                             flex: 1,
                             child: InkWell(
                               onTap: (){
-                                debugPrint(data[3]["title"]);
+                                
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
+                                  );
+                                } else {
 
-                                int? line = prefs!.getInt("line");
+                                  debugPrint(data[3]["title"]);
 
-                                print("Ligne = ${line.toString()}");
+                                  int? line = prefs!.getInt("line");
 
-                                Navigator.push(
-                                  context, 
-                                  MaterialPageRoute(builder: (context) => LineInfos(line: line!) )
-                                );
+                                  print("Ligne = ${line.toString()}");
+
+                                  Navigator.push(
+                                    context, 
+                                    MaterialPageRoute(builder: (context) => LineInfos(line: line!) )
+                                  );
+                                } 
+
+                              
                               },
                               child: Card(
                                 // color: Colors.red,
@@ -474,34 +506,49 @@ class _DashboardViewState extends State<DashboardView> {
                           // ! Delete
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Icon(
-                                        CupertinoIcons.delete,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 50,
-                                      ),
-                                    ),
-    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[3]["title"]),
-                                          subtitle: Text(data[3]["subtitle"]),
+                            child: InkWell(
+                              onTap: (){
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
+                                  );
+                                } else {
+                                  showSimpleDialog(
+                                    "Attention !",
+                                    "Cela va supprimer toutes vos données"
+                                  );
+                                } 
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: Icon(
+                                          CupertinoIcons.delete,
+                                          color: Theme.of(context).primaryColor,
+                                          size: 50,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[3]["title"]),
+                                            subtitle: Text(data[3]["subtitle"]),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
                   
@@ -522,75 +569,240 @@ class _DashboardViewState extends State<DashboardView> {
                           // ! QR
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
-                                    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Icon(
-                                        CupertinoIcons.qrcode,
-                                        color: Theme.of(context).primaryColor,
-                                        size: 50,
-                                      ),
-                                    ),
-    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[4]["title"]),
-                                          subtitle: Text(data[4]["subtitle"]),
+                            child: InkWell(
+                              onTap: () {
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
+                                  );
+                                } else {
+                                  print("generate QR");
+                                } 
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: Icon(
+                                          CupertinoIcons.qrcode,
+                                          color: Theme.of(context).primaryColor,
+                                          size: 50,
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[4]["title"]),
+                                            subtitle: Text(data[4]["subtitle"]),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
     
                           const SizedBox(width: 10,),
                   
-                          // ! ADD
+                          // ! Activity
                           Expanded(
                             flex: 1,
-                            child: Card(
-                              // color: Colors.red,
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 15),
-                                child: Column(
-                                  children: [
+                            child: InkWell(
+                              onTap: (){
+                                if(prefs!.getBool('bus') == null || prefs!.getBool('bus') == false){
+                                  showSimpleDialog(
+                                    "Oups !",
+                                    "Vous devez d'abord ajouter votre bus"
+                                  );
+                                } else {
+
+                                  if (prefs!.getInt('active') == 0) {
+                                    showCupertinoDialog(
+                                    context: context, 
+                                    builder: (context)=> CupertinoAlertDialog(
+                                        title: const Text("Activité"),
+                                        content: const Text("Attention, cela va rendre votre bus détectable"),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              "D'accord",
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                            ),
+                                            onPressed: () async {
+
+                                              setState(() {
+                                                loading = true;
+                                              });
+
+                                              Navigator.pop(context);
+
+                                              Map<String, dynamic> json = {
+                                                "webId" : prefs!.getString('webId') 
+                                              };
+                                              await busController.getBus(json).then((bus) async {
+
+                                                Map<String, dynamic> login = {
+                                                  "idp" : "https://solidcommunity.net",
+                                                  "username" : prefs!.getString('username'),
+                                                  "password" : prefs!.getString('password')
+                                                };
+
+                                                Map<String, dynamic> busData = {
+                                                  "login" : login,
+                                                  "webId" : prefs!.getString('webId'),
+                                                  "bus" : {
+                                                    "nom" : bus.name,
+                                                    "marque" : bus.marque,
+                                                    "matricule" : bus.matricule,
+                                                    "line" : prefs!.getInt('line'),
+                                                    "activity" : "1",
+                                                  }
+                                                };
+
+                                                await busController.updateBus(busData);
+
+                                                prefs!.setInt('active', 1);
+
+                                                setState(() {
+                                                  print("activité");
+                                                  loading = false;
+                                                });
+
+                                              });
+
+                                            }
+                                          ),
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              "Annuler",
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                            ),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            }
+                                          ),
+                                        ],
+                                        )
+                                      );
+                                  } else {
+                                    showCupertinoDialog(
+                                    context: context, 
+                                    builder: (context)=> CupertinoAlertDialog(
+                                        title: const Text("Activité"),
+                                        content: const Text("Attention, cela va rendre votre bus non détectable"),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              "D'accord",
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                            ),
+                                            onPressed: () async {
+                                              setState(() {
+                                                loading = true;
+                                              });
+
+                                              Navigator.pop(context);
+
+                                              Map<String, dynamic> json = {
+                                                "webId" : prefs!.getString('webId') 
+                                              };
+                                              await busController.getBus(json).then((bus) async {
+
+                                                Map<String, dynamic> login = {
+                                                  "idp" : "https://solidcommunity.net",
+                                                  "username" : prefs!.getString('username'),
+                                                  "password" : prefs!.getString('password')
+                                                };
+
+                                                Map<String, dynamic> busData = {
+                                                  "login" : login,
+                                                  "webId" : prefs!.getString('webId'),
+                                                  "bus" : {
+                                                    "nom" : bus.name,
+                                                    "marque" : bus.marque,
+                                                    "matricule" : bus.matricule,
+                                                    "line" : prefs!.getInt('line'),
+                                                    "activity" : "0",
+                                                  }
+
+                                                };
+
+                                                await busController.updateBus(busData);
+
+                                                prefs!.setInt('active', 0);
+
+                                                
+                                                // ignore: use_build_context_synchronously
+                                                setState(() {
+                                                  print("activité");
+                                                  loading = false;
+                                                });
+
+                                              });
+
+                                            }
+                                          ),
+                                          CupertinoDialogAction(
+                                            child: Text(
+                                              "Annuler",
+                                              style: TextStyle(color: Theme.of(context).primaryColor),
+                                            ),
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            }
+                                          ),
+                                        ],
+                                        )
+                                      );
                                     
-                                    Expanded(
-                                      flex: 1,
-                                      // child: Icon(
-                                      //   CupertinoIcons.tornado,
-                                      //   color: Theme.of(context).primaryColor,
-                                      //   size: 50,
-                                      // ),
-                                      child: CupertinoSwitch(
-                                        
-                                        value: false, 
-                                        onChanged: (val){}
+                                  }
+                                } 
+                              },
+                              child: Card(
+                                // color: Colors.red,
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 15),
+                                  child: Column(
+                                    children: [
+                                      
+                                      Expanded(
+                                        flex: 1,
+                                        child: widget.prefs.getInt('active') == null 
+                                        ? const CupertinoSwitch( value: false,  onChanged: null)
+                                        : widget.prefs.getInt('active') == 0 
+                                        ? const CupertinoSwitch( value: false,  onChanged: null)
+                                        : const CupertinoSwitch( value: true, onChanged: null)
+                                         
                                       ),
-                                    ),
-    
-                                    Expanded(
-                                      flex: 1,
-                                      child: Center(
-                                        child: ListTile(
-                                          title: Text(data[5]["title"]),
-                                          subtitle: Text(data[5]["subtitle"]),
+                                
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: ListTile(
+                                            title: Text(data[5]["title"]),
+                                            subtitle: 
+                                            widget.prefs.getInt('active') == null 
+                                            ? const Text("Ajoutez d'abord un bus")
+                                            : widget.prefs.getInt('active') == 0 
+                                            ? const Text("Le bus est non détectable")
+                                            : const Text("Le bus est détectable")
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              )
+                                    ],
+                                  ),
+                                )
+                              ),
                             ),
                           ),
                   

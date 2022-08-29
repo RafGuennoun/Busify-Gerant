@@ -1,6 +1,7 @@
 
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/models/Bus_model.dart';
+import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -29,7 +30,7 @@ class _BusInfosState extends State<BusInfos> {
 
   bool load = false;
   
-  late SharedPreferences prefs;
+  SharedPreferences? prefs;
 
   Future initPrefs() async {
     // instance
@@ -165,8 +166,8 @@ class _BusInfosState extends State<BusInfos> {
     
                   const SizedBox(height: 30,),
     
-                  load ? const CircularProgressIndicator() :
-                  CupertinoButton(
+                  load ? const Loading() 
+                  : CupertinoButton(
                     color: Theme.of(context).primaryColor,
                     child: Text( read ? "Modifier" : "Enregistrer"), 
                     onPressed: () async {
@@ -201,14 +202,16 @@ class _BusInfosState extends State<BusInfos> {
                           Map<String, dynamic> json = {
                             "login" :  {
                               "idp" : "https://solidcommunity.net",
-                              "username" : prefs.getString('username'),
-                              "password" : prefs.getString('password') 
+                              "username" : prefs!.getString('username'),
+                              "password" : prefs!.getString('password') 
                             },
-                            "webId" : prefs.getString('webId'),
+                            "webId" : prefs!.getString('webId'),
                             "bus" : {
                               "nom" : _nomController.text,
                               "matricule" : _matController.text,
-                              "marque" : _marqueController.text
+                              "marque" : _marqueController.text,
+                              "line" : prefs!.getInt('line').toString(),
+                              "activity" : "0"
                             }
                           };
     

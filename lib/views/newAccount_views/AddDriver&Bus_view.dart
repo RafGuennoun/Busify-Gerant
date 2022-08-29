@@ -364,11 +364,12 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                         });
 
                         prefs!.setBool('bus', true);
+                        prefs!.setInt('active', 1);
 
                         // ignore: use_build_context_synchronously
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: ((context) => const DashboardView())),
+                          MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
                           ((Route route) => false)
                         );
 

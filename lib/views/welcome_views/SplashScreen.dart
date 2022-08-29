@@ -16,24 +16,15 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
 
+   SharedPreferences? prefs;
   Future check() async {
     
     // instance
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+   prefs = await SharedPreferences.getInstance();
     
-    bool? intro = prefs.getBool('intro');
-    bool? login = prefs.getBool('login');
+    bool? intro = prefs!.getBool('intro');
+    bool? login = prefs!.getBool('login');
     
-    // if (key==null) {
-    // // ignore: use_build_context_synchronously
-    // Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (context) => const IntroductionPage()));
-    // } else {
-    //   // ignore: use_build_context_synchronously
-    //   Navigator.of(context).pushReplacement(
-    //     MaterialPageRoute(builder: (context) => const HomeView()));
-    // }
-
     if (intro == null) {
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
@@ -46,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
       } else {
         // ignore: use_build_context_synchronously
         Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const DashboardView()));
+        MaterialPageRoute(builder: (context) => DashboardView(prefs: prefs!,)));
       }
     }
 
@@ -63,6 +54,7 @@ class _SplashScreenState extends State<SplashScreen> {
         check();
       } 
     );
+    
   }
   
   @override

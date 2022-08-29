@@ -252,7 +252,7 @@ class _LoginViewState extends State<LoginView> {
 
                                             Navigator.pushReplacement(
                                               context,
-                                              MaterialPageRoute(builder: ((context) => const DashboardView())),
+                                              MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
                                             );
                                           }
                                         ),

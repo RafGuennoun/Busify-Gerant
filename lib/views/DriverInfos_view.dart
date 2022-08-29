@@ -1,6 +1,7 @@
 
 import 'package:busify_gerant/controllers/Driver_controller.dart';
 import 'package:busify_gerant/models/Driver_model.dart';
+import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -165,8 +166,8 @@ class _DriverInfoState extends State<DriverInfo> {
     
                   const SizedBox(height: 30,),
     
-                  load ? const CircularProgressIndicator() :
-                  CupertinoButton(
+                  load ? const Loading() 
+                  : CupertinoButton(
                     color: Theme.of(context).primaryColor,
                     child: Text( read ? "Modifier" : "Enregistrer"), 
                     onPressed: () async {

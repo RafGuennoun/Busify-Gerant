@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.busify_gerant">
    <application
-        android:label="busify_gerant"
+        android:label="Busify Gérant"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/gerant">
         <activity
             android:name=".MainActivity"
             android:exported="true"

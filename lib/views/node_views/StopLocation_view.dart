@@ -49,7 +49,7 @@ class _StopLocationState extends State<StopLocation> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Map"),
+        title: const Text("Localisation"),
         centerTitle: true,
       ),
 

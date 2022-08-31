@@ -102,7 +102,7 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
       child: Scaffold(
     
         appBar: AppBar(
-          title: const Text("Chauffeur"),
+          title: const Text("Informations"),
           centerTitle: true,
         ),
         

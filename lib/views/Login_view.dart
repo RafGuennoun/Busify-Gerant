@@ -1,6 +1,7 @@
 import 'package:busify_gerant/controllers/Account_controller.dart';
 import 'package:busify_gerant/models/Account_model.dart';
 import 'package:busify_gerant/views/Dashboard_view.dart';
+import 'package:busify_gerant/views/newAccount_views/CreatePOD.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:busify_gerant/widgets/SimpleAlertDialog.dart';
 import 'package:flutter/cupertino.dart';
@@ -77,21 +78,20 @@ class _LoginViewState extends State<LoginView> {
                 children: [
 
                   //App logo
-                  const SizedBox(
+                  SizedBox(
+                    width: width*0.3,
+                    height: width*0.3,
                     child: Center(
-                      child: CircleAvatar(
-                        radius: 50,
-                        child: Text('Logo'),
-                      ),
+                      child: Image.asset('assets/gerant.png'),
                     ),
                   ),
     
-                  const SizedBox(height: 25,),
+                  const SizedBox(height: 15,),
     
                   SizedBox(
                     child: Center(
                       child: Text(
-                        'Busify',
+                        'Busify Gérant',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
                     ),
@@ -250,9 +250,10 @@ class _LoginViewState extends State<LoginView> {
 
                                             Navigator.pop(context);
 
-                                            Navigator.pushReplacement(
+                                            Navigator.pushAndRemoveUntil(
                                               context,
                                               MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
+                                              (route) => false
                                             );
                                           }
                                         ),
@@ -274,13 +275,35 @@ class _LoginViewState extends State<LoginView> {
                       const SizedBox(height: 30,),
 
                       Text(
-                        "Vous n'avez pas encore un POD ?",
+                        "Apprendre comment créer un POD",
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
 
                       CupertinoButton(
                         child: Text(
-                          'Créer un POD',
+                          'Guide pour créer un POD',
+                          style: TextStyle(
+                            fontFamily: 'Poppins', fontSize: 14,
+                            color: Theme.of(context).primaryColor
+                          ),
+                        ),
+                        onPressed: (){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => const CreatePOD())
+                          );
+                        }
+                      ),
+                      const SizedBox(height: 10,),
+
+                      Text(
+                        "Site pour créer un POD",
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+
+                      CupertinoButton(
+                        child: Text(
+                          'solidcommunity.net',
                           style: TextStyle(
                             fontFamily: 'Poppins', fontSize: 14,
                             color: Theme.of(context).primaryColor

@@ -72,7 +72,7 @@ class _BusInfosState extends State<BusInfos> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Bus infos"),
+          title: const Text("Informations bus"),
           centerTitle: true,
         ),
     

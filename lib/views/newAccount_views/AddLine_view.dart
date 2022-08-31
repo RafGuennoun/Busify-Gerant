@@ -199,11 +199,15 @@ class _AddLineState extends State<AddLine> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Container(
+          SizedBox(
             width: width*0.3,
             height: width*0.3,
-            color: Theme.of(context).primaryColor,
-            child: const Center(child: Text("LOGO")),
+            child: Center(
+              child: Image.asset(
+                'assets/gerant.png',
+                fit: BoxFit.fill,
+              ),
+            ),
           ),
 
           SizedBox(

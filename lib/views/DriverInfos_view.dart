@@ -72,7 +72,7 @@ class _DriverInfoState extends State<DriverInfo> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Bus infos"),
+          title: const Text("Informations chauffeur"),
           centerTitle: true,
         ),
     

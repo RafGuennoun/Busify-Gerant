@@ -193,52 +193,52 @@ class _DashboardViewState extends State<DashboardView> {
               },
             ),
 
-            IconButton(
-              icon: const Icon(
-                Icons.logout_rounded
-              ),
-              onPressed: (){
+            // IconButton(
+            //   icon: const Icon(
+            //     Icons.logout_rounded
+            //   ),
+            //   onPressed: (){
 
-                showCupertinoDialog(
-                  context: context, 
-                  builder: (context)=> CupertinoAlertDialog(
-                    title: const Text("Déconnexion"),
-                    content: const Text("Voulez vous vraiment vous déconnecter"),
-                    actions: [
-                      CupertinoDialogAction(
-                        child: Text(
-                          "Oui",
-                          style: TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onPressed: (){
-                          // prefs!.remove('username');
-                          // prefs!.remove('password');
-                          // prefs!.remove('webId');
-                          // prefs!.setBool('login', false);
+            //     showCupertinoDialog(
+            //       context: context, 
+            //       builder: (context)=> CupertinoAlertDialog(
+            //         title: const Text("Déconnexion"),
+            //         content: const Text("Voulez vous vraiment vous déconnecter"),
+            //         actions: [
+            //           CupertinoDialogAction(
+            //             child: Text(
+            //               "Oui",
+            //               style: TextStyle(color: Theme.of(context).primaryColor),
+            //             ),
+            //             onPressed: (){
+            //               // prefs!.remove('username');
+            //               // prefs!.remove('password');
+            //               // prefs!.remove('webId');
+            //               // prefs!.setBool('login', false);
 
-                          // Navigator.pushReplacement(
-                          //   context,
-                          //   MaterialPageRoute(builder: ((context) => const DashboardView())),
-                          // );
-                        }
-                      ),
-                      CupertinoDialogAction(
-                        child: Text(
-                          "Annuler",
-                          style: TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        }
-                      ),
-                    ],
-                  )
-                );
+            //               // Navigator.pushReplacement(
+            //               //   context,
+            //               //   MaterialPageRoute(builder: ((context) => const DashboardView())),
+            //               // );
+            //             }
+            //           ),
+            //           CupertinoDialogAction(
+            //             child: Text(
+            //               "Annuler",
+            //               style: TextStyle(color: Theme.of(context).primaryColor),
+            //             ),
+            //             onPressed: (){
+            //               Navigator.pop(context);
+            //             }
+            //           ),
+            //         ],
+            //       )
+            //     );
                 
 
                
-              }, 
-            )
+            //   }, 
+            // )
           ],
         ),
       

@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:busify_gerant/Widgets/SimpleAlertDialog.dart';
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
@@ -6,11 +7,11 @@ import 'package:busify_gerant/models/Driver_model.dart';
 import 'package:busify_gerant/views/BusInfos_view.dart';
 import 'package:busify_gerant/views/DriverInfos_view.dart';
 import 'package:busify_gerant/views/LineInfos_view.dart';
+import 'package:busify_gerant/views/QRview.dart';
 import 'package:busify_gerant/views/newAccount_views/AddLine_view.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
@@ -24,6 +25,24 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
 
+  bool darkmode = false;
+  dynamic savedThemeMode;
+
+  Future getCurrentTheme() async {
+    savedThemeMode = await AdaptiveTheme.getThemeMode();
+    if (savedThemeMode.toString() == 'AdaptiveThemeMode.dark') {
+      print('mode sombre');
+      setState(() {
+        darkmode = true;
+      });
+    } else {
+      setState(() {
+        darkmode = false;
+      });
+      print('mode clair');
+    }
+  }
+
   SharedPreferences? prefs;
 
   Future initPrefs() async {
@@ -36,6 +55,7 @@ class _DashboardViewState extends State<DashboardView> {
   initState(){
     initPrefs();
     super.initState();
+    getCurrentTheme();
   }
 
   BusController busController = BusController();
@@ -95,151 +115,162 @@ class _DashboardViewState extends State<DashboardView> {
         appBar: AppBar(
           title: const Text("Busify Gérant"),
           centerTitle: true,
-          actions: [
+        ),
 
-            IconButton(
-              icon: const Icon(
-                Icons.add_box_outlined
-              ),
-              onPressed: () async {
+        drawer: Drawer(
+          child: SizedBox(
+            width: width,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                
+                const SizedBox(height: 25,),
+                
+                // Logo
+                SizedBox(
+                  width: 100,
+                  height: 100,
+                  child: Image.asset("assets/gerant.png"),
+                ),
 
-                bool hasInternet = await InternetConnectionChecker().hasConnection;
+                const SizedBox(height: 20,),
 
-                if (hasInternet) {
+                // Username
+                SizedBox(
+                  child: Center(
+                    child: Text(
+                     "Gérant de bus",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                  ),
+                ),
 
-                  showCupertinoDialog(
-                  context: context, 
-                  builder: (context)=> CupertinoAlertDialog(
-                    title: const Text("Rejoindre le reseau"),
-                    content: const Text("Attention, si vous avez déja un bus toutes vos données vont etres réinitialisées"),
-                    actions: [
-                      CupertinoDialogAction(
-                        child: Text(
-                          "Rejoindre",
-                          style: TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onPressed: () async {
-                          print("Add new bus");
+                const SizedBox(height: 10,),
+              
+                const Divider(),
 
-                          Map<String, dynamic> authData = {
-                            "idp" : "https://solidcommunity.net",
-                            "username" : "bus1",
-                            "password" : "bus1123456" 
-                          };
+                // Ajouter bus
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(
+                        CupertinoIcons.bus,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      ),
+                      title: Text(
+                        "Ajouter bus",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      onTap: () {
 
-                          Map<String, dynamic> initFiles = {
-                            "login" :  {
-                                "idp" : "https://solidcommunity.net",
-                                "username" : "bus1",
-                                "password" : "bus1123456" 
-                            },
-                            "webId" : "https://bus1.solidcommunity.net",
-                            "bus" : {
-                                "nom" : "",
-                                "matricule" : "",
-                                "marque" : "",
-                                "line" : "",
-                                "activity" : "0"
-                            },
-                            "driver" : {
-                                "nom" : "",
-                                "prenom" : "",
-                                "birthday" : "",
-                                "id" : ""
-                            },
-                            "location" : {
-                                "lat" : "36.7113",
-                                "lon" : "3.18171",
-                                "track" : ""  
-                            }
-                          };
+                        String webId = prefs!.getString("webId")!; 
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
 
-                          await busController.init(initFiles);
-
-                          // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
-
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: ((context) => AddLine(authData: authData))),
-                          );
+                        // ignore: use_build_context_synchronously
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: ((context) => AddLine(webId: webId))),
+                        );
 
 
+                        
+                      }
+                    ),
+                  ),
+                ),
+
+                const Divider(),
+
+                // Theme
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(
+                        CupertinoIcons.moon_fill,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      ),
+                      title: 
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Mode sombre",
+                            style: Theme.of(context).textTheme.bodyMedium,  
+                          ),
                           
-                        }
+                          CupertinoSwitch(
+                            value: darkmode, 
+                            activeColor: Colors.amber,
+                            onChanged: (value){
+                              print(value);
+                              if (value == true) {
+                                AdaptiveTheme.of(context).setDark();
+                              } else {
+                                AdaptiveTheme.of(context).setLight();
+                              }
+                              setState(() {
+                                darkmode = value;
+                              });
+                            }
+                          ),
+                        ],
+                      ) 
+                 
+                    ),
+                  ),
+                ),
+
+                const Divider(),
+
+                // Nous contacter
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(
+                        CupertinoIcons.mail_solid,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
                       ),
-                      CupertinoDialogAction(
-                        child: Text(
-                          "Annuler",
-                          style: TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                        onPressed: (){
-                          Navigator.pop(context);
-                        }
+                      title: Text(
+                        "Nous contacter",
+                        style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                    ],
-                  )
-                );
+                      onTap: () {
+                      },
+                    ),
+                  ),
+                ),
+
+                // A propos
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Card(
+                    child: ListTile(
+                      leading: Icon(
+                        CupertinoIcons.info_circle_fill,
+                        color: Theme.of(context).primaryColor,
+                        size: 35,
+                      ),
+                      title: Text(
+                        "A propos",
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      onTap: () {
+                      },
+                    ),
+                  ),
+                ),
+
                 
-                } else {
-                  showSimpleDialog(
-                    "Oups !", 
-                    "Verifiez votre connexion internet."
-                  );
-                }
-               
-
-              },
-            ),
-
-            // IconButton(
-            //   icon: const Icon(
-            //     Icons.logout_rounded
-            //   ),
-            //   onPressed: (){
-
-            //     showCupertinoDialog(
-            //       context: context, 
-            //       builder: (context)=> CupertinoAlertDialog(
-            //         title: const Text("Déconnexion"),
-            //         content: const Text("Voulez vous vraiment vous déconnecter"),
-            //         actions: [
-            //           CupertinoDialogAction(
-            //             child: Text(
-            //               "Oui",
-            //               style: TextStyle(color: Theme.of(context).primaryColor),
-            //             ),
-            //             onPressed: (){
-            //               // prefs!.remove('username');
-            //               // prefs!.remove('password');
-            //               // prefs!.remove('webId');
-            //               // prefs!.setBool('login', false);
-
-            //               // Navigator.pushReplacement(
-            //               //   context,
-            //               //   MaterialPageRoute(builder: ((context) => const DashboardView())),
-            //               // );
-            //             }
-            //           ),
-            //           CupertinoDialogAction(
-            //             child: Text(
-            //               "Annuler",
-            //               style: TextStyle(color: Theme.of(context).primaryColor),
-            //             ),
-            //             onPressed: (){
-            //               Navigator.pop(context);
-            //             }
-            //           ),
-            //         ],
-            //       )
-            //     );
-                
-
-               
-            //   }, 
-            // )
-          ],
+              ],
+            )
+          ),
         ),
       
         body:  loading 
@@ -577,7 +608,23 @@ class _DashboardViewState extends State<DashboardView> {
                                     "Vous devez d'abord ajouter votre bus"
                                   );
                                 } else {
-                                  print("generate QR");
+
+                                  Map<String, dynamic> data = {
+                                    "scan" : "bus",
+                                    "qr" : {
+                                      "login" : {
+                                          "idp" : "https://solidcommunity.net",
+                                          "username" : prefs!.getString("username"),
+                                          "password" : prefs!.getString("password") 
+                                      },
+                                      "webId" : prefs!.getString("webId")
+                                    }
+                                  };
+
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => QRView(data: data,))
+                                  );
                                 } 
                               },
                               child: Card(

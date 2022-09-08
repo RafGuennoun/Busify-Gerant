@@ -44,4 +44,23 @@ class AccountController {
     }
 
   }
+
+  Future yx(Map<String, dynamic> json) async {
+    Response response;
+    var dio = Dio();
+    response = await dio.post(
+      "${api}account/yx", 
+      data: json
+    );
+
+    if (response.statusCode == 200) {
+      
+      print(response.data.toString());
+      return response.data.toString();
+    } else {
+      debugPrint(response.statusCode.toString());
+      throw Exception('Failed to login.');
+    }
+
+  }
 } 

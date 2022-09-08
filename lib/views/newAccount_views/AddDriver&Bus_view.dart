@@ -1,6 +1,6 @@
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
-import 'package:busify_gerant/views/Dashboard_view.dart';
+import 'package:busify_gerant/views/newAccount_views/QRData.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -95,8 +95,6 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
     
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
-
 
     return SafeArea(
       child: Scaffold(
@@ -304,7 +302,7 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                   : CupertinoButton(
                     color: Theme.of(context).primaryColor,
                     child: const Text('Conituer'),
-                    onPressed: () async{
+                    onPressed: () {
 
                       if (
                         _nomController.text.isEmpty ||
@@ -321,62 +319,39 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                         
                       } else {
 
-                        setState(() {
-                          loading = true;
-                        });
-
-                        Map<String, dynamic> login = {
-                          "idp" : "https://solidcommunity.net",
-                          "username" : "bus1",
-                          "password" : "bus1123456" 
-                        };
-
-                        String webId = "https://bus1.solidcommunity.net/";
-
-                        Map<String, dynamic> driver = {
-                          "login" : login,
-                          "webId" : webId,
-                          "driver" : {  
-                            "nom" :  _nomController.text,
-                            "prenom" : _prenomController.text,
-                            "id" : _idController.text
-                          }
+                        Map<String, dynamic> driver = {  
+                          "nom" :  _nomController.text,
+                          "prenom" : _prenomController.text,
+                          "id" : _idController.text
                         };
 
                         Map<String, dynamic> bus = {
-                          "login" : login,
-                          "webId" : webId,
-                          "bus" : {
-                            "nom" : _busController.text,
-                            "marque" : _marqueController.text,
-                            "matricule" : _matriculeController.text,
-                            "line" : widget.data["ligne"],
-                            "activity" : "0",
-                          }
+                          "nom" : _busController.text,
+                          "marque" : _marqueController.text,
+                          "matricule" : _matriculeController.text,
+                          "line" : widget.data["ligne"],
+                          "activity" : "1",
                         };
 
-                        await driverController.updateDriver(driver).then((value) async {
-                          await busController.updateBus(bus).then((value){
-                            setState(() {
-                              loading = false;
-                            });
-                          });  
-                        });
-
-                        prefs!.setBool('bus', true);
-                        prefs!.setInt('active', 1);
+                        // prefs!.setBool('bus', true);
+                        // prefs!.setInt('active', 1);
 
                         // ignore: use_build_context_synchronously
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
-                          ((Route route) => false)
+                        // Navigator.pushAndRemoveUntil(
+                        //   context,
+                        //   MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
+                        //   ((Route route) => false)
+                        // );
+
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context) => QRData(
+                            webId: widget.data["webId"], 
+                            bus: bus, 
+                            driver: driver
+                          ))
                         );
 
-                        showDialog(
-                          "Felicitations", 
-                          "Vous avez rejoint notre application."
-                        );
                         
                       }
 

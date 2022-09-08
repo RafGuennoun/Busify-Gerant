@@ -1,5 +1,4 @@
-
-import 'package:busify_gerant/views/newAccount_views/CreatePOD.dart';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:busify_gerant/views/welcome_views/SplashScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -13,10 +12,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Busify-Gérant',
-      theme: ThemeData(
+     return AdaptiveTheme(
+      initial: AdaptiveThemeMode.light, 
+      light: ThemeData(
         brightness: Brightness.light,
         primaryColor: Colors.blue,
         primarySwatch: Colors.blue,
@@ -76,8 +74,76 @@ class MyApp extends StatelessWidget {
           )
         )
       ),
-      
-      home: const SplashScreen(),
+
+      dark: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.amber,
+        primarySwatch: Colors.amber,
+
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.amber
+        ),
+
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          selectedItemColor: Colors.amber
+        ),
+
+        appBarTheme: const AppBarTheme(
+          titleTextStyle: TextStyle(
+            fontFamily: 'Poppins',
+            fontWeight: FontWeight.normal,
+            fontSize: 20,
+            color: Colors.black87
+          ),
+          foregroundColor: Colors.black87,
+            backgroundColor: Colors.amber,
+            centerTitle: false,
+            iconTheme: IconThemeData(
+              color: Colors.black87
+            ),
+        ),
+
+        iconTheme: const IconThemeData(
+          color: Colors.amber
+        ),
+
+        textTheme:  const TextTheme(
+            
+          titleLarge: TextStyle(
+            fontFamily : 'Poppins', fontWeight : FontWeight.bold,
+            fontSize: 20,
+          ),
+
+          titleMedium: TextStyle(
+            fontFamily : 'Poppins', fontWeight : FontWeight.bold,
+            fontSize: 18,
+          ),
+
+          titleSmall: TextStyle(
+            fontFamily : 'Poppins',
+            fontSize: 18,
+          ),
+
+          bodyMedium: TextStyle(
+            fontFamily : 'Poppins', fontWeight : FontWeight.normal,
+            fontSize: 14,
+          ),
+
+          bodySmall: TextStyle(
+            fontFamily : 'Poppins', fontWeight : FontWeight.normal,
+            fontSize: 12,
+          )
+        )
+      ),
+
+
+      builder: (theme, darkTheme) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Busify Gérant',
+        theme: theme,
+        darkTheme: darkTheme,
+        home: const SplashScreen(),
+      )
     );
   }
 }

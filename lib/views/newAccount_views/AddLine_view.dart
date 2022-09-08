@@ -9,9 +9,10 @@ import '../../Widgets/SimpleAlertDialog.dart';
 
 class AddLine extends StatefulWidget {
 
-  final Map<String, dynamic> authData;
+  // final Map<String, dynamic> authData;
+  final String webId;
 
-  const AddLine({required this.authData});
+  const AddLine({required this.webId});
 
   @override
   State<AddLine> createState() => _AddLineState();
@@ -58,139 +59,166 @@ class _AddLineState extends State<AddLine> {
       );
     }
     
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Ligne"),
-        centerTitle: true,
-      ),
-      body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
-            child: SizedBox(
-              width: width,
-              // height: height*0.8,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-
-                  //App logos
-                  appLogos(width, context),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Ligne"),
+          centerTitle: true,
+        ),
+        body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+              child: SizedBox(
+                width: width,
+                // height: height*0.8,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
     
-                  const SizedBox(height: 30,),
+                    //App logos
+                    appLogos(width, context),
+      
+                    const SizedBox(height: 30,),
+      
+                    // Text explicatif
+                    explainTexts(context),
     
-                  // Text explicatif
-                  explainTexts(context),
+                    const SizedBox(height: 15,),
+                    
+                    // TextField(
+                    //   controller: _lignController,
+                    //   // autofocus: true,
+                    //   readOnly: true,
+                    //   textAlign: TextAlign.center,
+                    //   style: Theme.of(context).textTheme.bodyMedium,
+                    //   keyboardType: TextInputType.number,
+                    //   decoration: InputDecoration(
+                    //     border: const OutlineInputBorder(),
+                    //     prefixIcon: const Icon(CupertinoIcons.number),
+                    //     labelText: "Identifiant de ligne ",
+                    //     labelStyle: Theme.of(context).textTheme.bodyMedium,
+                    //     hintText: "Entrez l'identifiant de la ligne",
+                    //     hintStyle: Theme.of(context).textTheme.bodyMedium,
+                    //     errorText: empty == true ? "Identifiant obligatoire" : null,
+                    //   ),
+                    //   onChanged: (newText) {
+                    //     setState(() {
+                    //       empty = false;
+                    //     });
+                    //   },
+                    // ),
 
-                  const SizedBox(height: 15,),
-                  
-                  TextField(
-                    controller: _lignController,
-                    // autofocus: true,
-                    readOnly: true,
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      prefixIcon: const Icon(CupertinoIcons.number),
-                      labelText: "Identifiant de ligne ",
-                      labelStyle: Theme.of(context).textTheme.bodyMedium,
-                      hintText: "Entrez l'identifiant de la ligne",
-                      hintStyle: Theme.of(context).textTheme.bodyMedium,
-                      errorText: empty == true ? "Identifiant obligatoire" : null,
+                    Column(
+                      children: [
+                        Card(
+                          child: RadioListTile(
+                            groupValue: true,
+                            value: true,
+                            title: Text(
+                              "Vieux Kouba -> Place des Martyrs",
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            secondary: IconButton(
+                              icon: Icon(
+                                CupertinoIcons.link,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              onPressed: (){
+                                print("Go to the link");
+                              }, 
+                            ),
+                            onChanged: (value) { },
+                          ),
+                        )
+                      ],
                     ),
-                    onChanged: (newText) {
-                      setState(() {
-                        empty = false;
-                      });
-                    },
-                  ),
-
-                  const SizedBox(height: 20,),
-
-                  CupertinoButton(
-                    color: Theme.of(context).primaryColor,
-                    child: const Text('Conituer'),
-                    onPressed: () async {
-
-                      if (_lignController.text.isEmpty) {
-                        showDialog(
-                          "Oups !", 
-                          "Veuillez introduire l'identifiant de la ligne"
-                        );
-                      } else {
-
-                        bool hasInternet = await InternetConnectionChecker().hasConnection;
-
-                        if (hasInternet) {
-
-                          Map<String, dynamic> authData = widget.authData;
-                          int line = int.parse(_lignController.text);
-
-                          Map<String, dynamic> data = {
-                            "login" : authData,
-                            "ligne" : line
-                          };
-
-                          prefs.setInt("line", line );
-
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: ((context) => StopsGenerator(data: data)))
-                          );
-                        
-                        } else {
+    
+                    const SizedBox(height: 20,),
+    
+                    CupertinoButton(
+                      color: Theme.of(context).primaryColor,
+                      child: const Text('Conituer'),
+                      onPressed: () async {
+    
+                        if (_lignController.text.isEmpty) {
                           showDialog(
                             "Oups !", 
-                            "Verifiez votre connexion internet."
+                            "Veuillez introduire l'identifiant de la ligne"
+                          );
+                        } else {
+    
+                          bool hasInternet = await InternetConnectionChecker().hasConnection;
+    
+                          if (hasInternet) {
+    
+                            // Map<String, dynamic> authData = widget.authData;
+                            int line = int.parse(_lignController.text);
+    
+                            Map<String, dynamic> data = {
+                              "webId" : widget.webId,
+                              "ligne" : line
+                            };
+    
+                            prefs.setInt("line", line );
+    
+                            // ignore: use_build_context_synchronously
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: ((context) => StopsGenerator(data: data)))
+                            );
+                          
+                          } else {
+                            showDialog(
+                              "Oups !", 
+                              "Verifiez votre connexion internet."
+                            );
+                          }
+    
+                       
+                          
+                        }
+    
+                        
+                      },
+                    ),
+    
+                    const SizedBox(height: 35,),
+    
+                    Text(
+                      "Vous ne connaissez pas OpenStreetMap ?",
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+    
+                    CupertinoButton(
+                      child: Text(
+                        'OpenStreetMap',
+                        style: TextStyle(
+                          fontFamily: 'Poppins', fontSize: 14,
+                          color: Theme.of(context).primaryColor
+                        ),
+                      ),
+                      onPressed: () async {
+                        final Uri url = Uri.parse('https://www.openstreetmap.org/#map=5/28.413/1.653');
+                        if (!await launchUrl(
+                          url,
+                          mode: LaunchMode.externalApplication,
+                        )) {
+                          showDialog(
+                            "Oups", 
+                            "Une erreur est survenu."
                           );
                         }
-
-                     
-                        
-                      }
-
-                      
-                    },
-                  ),
-
-                  const SizedBox(height: 35,),
-
-                  Text(
-                    "Vous ne connaissez pas OpenStreetMap ?",
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
-
-                  CupertinoButton(
-                    child: Text(
-                      'OpenStreetMap',
-                      style: TextStyle(
-                        fontFamily: 'Poppins', fontSize: 14,
-                        color: Theme.of(context).primaryColor
-                      ),
+                      },
                     ),
-                    onPressed: () async {
-                      final Uri url = Uri.parse('https://www.openstreetmap.org/#map=5/28.413/1.653');
-                      if (!await launchUrl(
-                        url,
-                        mode: LaunchMode.externalApplication,
-                      )) {
-                        showDialog(
-                          "Oups", 
-                          "Une erreur est survenu."
-                        );
-                      }
-                    },
-                  ),
-
-                  
-                ],
+    
+                    
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+      ),
     );
   }
 
@@ -248,6 +276,13 @@ class _AddLineState extends State<AddLine> {
           "Pour utiliser l'application, vous devez recuperer l'identifiant de la ligne dans OpenstreetMap et l'application sen contentera du reste.",
           textAlign: TextAlign.justify,
           style: Theme.of(context).textTheme.bodyMedium,
+        ),
+
+        const SizedBox(height: 25,),
+
+        Text(
+          'Liste des lignes',
+          style: Theme.of(context).textTheme.titleMedium,
         ),
 
       ],

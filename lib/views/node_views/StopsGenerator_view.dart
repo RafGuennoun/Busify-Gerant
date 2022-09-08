@@ -3,7 +3,6 @@ import 'package:busify_gerant/controllers/Relation_controller.dart';
 import 'package:busify_gerant/models/Node_model.dart';
 import 'package:busify_gerant/models/Realtion_model.dart';
 import 'package:busify_gerant/views/newAccount_views/AddDriver&Bus_view.dart';
-import 'package:busify_gerant/views/node_views/StopsSelector_view.dart';
 import 'package:busify_gerant/views/relation_views/RelationLocation_view.dart';
 import 'package:busify_gerant/widgets/Error.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
@@ -58,7 +57,7 @@ class _StopsGeneratorState extends State<StopsGenerator> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Informations sur la ligne ${widget.data['ligne']} :',
+                    'Informations sur la ligne :',
                     textAlign: TextAlign.justify,
                     style: Theme.of(context).textTheme.bodyMedium
                   ),
@@ -298,67 +297,12 @@ class _StopsGeneratorState extends State<StopsGenerator> {
                                 color: Theme.of(context).primaryColor,
                                 child: const Text('Suivant'),
                                 onPressed: () {
-                                  print("Continer");
-    
-                                  Map<String, dynamic> newData = {
-                                    "login" : widget.data["login"],
-                                    "ligne" : widget.data["ligne"],
-                                    "nodes" : arrets
-                                  };
-    
-                                  Navigator.push(
-                                    context, 
-                                    MaterialPageRoute(builder: (context) => StopsSelector(data: newData))
-                                  );
-                                },
-                              ),
-    
-                              const SizedBox(height: 25,),
-    
-                              Text(
-                                "Ignorer pour selectionner tout les arrêts",
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-    
-                              CupertinoButton(
-                                child: Text(
-                                  'Ignorer',
-                                  style: TextStyle(
-                                    fontFamily: 'Poppins', fontSize: 14,
-                                    color: Theme.of(context).primaryColor
-                                  ),
-                                ),
-                                onPressed: () {
                                   Navigator.push(
                                     context, 
                                     MaterialPageRoute(builder: (context) => AddDriverAndBus(data: widget.data))
                                   );
                                 },
                               ),
-    
-                           
-           
-                              
-    
-                              // Text(
-                              //   "Ignonez pour selectionner tout les arrêts de la ligne",
-                              //   style: Theme.of(context).textTheme.bodySmall,
-                              // ),
-    
-                              // CupertinoButton(
-                              //   child: Text(
-                              //     'Ignorer',
-                              //     style: TextStyle(
-                              //       fontFamily: 'Poppins', fontSize: 14,
-                              //       color: Theme.of(context).primaryColor
-                              //     ),
-                              //   ),
-                              //   onPressed: () {
-                              //     // TODO: FIX THIS
-                              //   },
-                              // ),
-    
-    
                             ],
                           );
                           

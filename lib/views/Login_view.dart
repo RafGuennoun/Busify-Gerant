@@ -1,13 +1,13 @@
 import 'package:busify_gerant/controllers/Account_controller.dart';
-import 'package:busify_gerant/models/Account_model.dart';
 import 'package:busify_gerant/views/Dashboard_view.dart';
 import 'package:busify_gerant/views/newAccount_views/CreatePOD.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:busify_gerant/widgets/SimpleAlertDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:solid_auth/solid_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LoginView extends StatefulWidget {
@@ -104,73 +104,73 @@ class _LoginViewState extends State<LoginView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Ajoutez les informations de votre POD :',
+                          "Authnetification au POD",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
 
-                        const SizedBox(height: 25,),
+                        // const SizedBox(height: 25,),
 
-                        // username
-                        TextField(
-                          controller: _usernameController,
-                          // autofocus: true,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            prefixIcon: const Icon(CupertinoIcons.person_fill),
-                            labelText: "Nom d'utilisateur ",
-                            labelStyle: Theme.of(context).textTheme.bodyMedium,
-                            hintText: "Entrez votre nom d'utulisateur",
-                            hintStyle: Theme.of(context).textTheme.bodyMedium,
-                            errorText: empty == true ? "Nom d'utulisateur obligatoire" : null,
+                        // // username
+                        // TextField(
+                        //   controller: _usernameController,
+                        //   // autofocus: true,
+                        //   textAlign: TextAlign.center,
+                        //   style: Theme.of(context).textTheme.bodyMedium,
+                        //   decoration: InputDecoration(
+                        //     border: const OutlineInputBorder(),
+                        //     prefixIcon: const Icon(CupertinoIcons.person_fill),
+                        //     labelText: "Nom d'utilisateur ",
+                        //     labelStyle: Theme.of(context).textTheme.bodyMedium,
+                        //     hintText: "Entrez votre nom d'utulisateur",
+                        //     hintStyle: Theme.of(context).textTheme.bodyMedium,
+                        //     errorText: empty == true ? "Nom d'utulisateur obligatoire" : null,
                             
-                          ),
-                          onChanged: (newText) {
-                            setState(() {
-                              empty = false;
-                            });
-                          },
-                        ),
+                        //   ),
+                        //   onChanged: (newText) {
+                        //     setState(() {
+                        //       empty = false;
+                        //     });
+                        //   },
+                        // ),
 
-                        const SizedBox(height: 15,),
+                        // const SizedBox(height: 15,),
 
-                        // Password
-                        TextField(
-                          controller: _passwordController,
-                          obscureText: obscure,
-                          autofocus: false,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          decoration: InputDecoration(
-                            prefixIconColor: Theme.of(context).primaryColor,
-                            prefixIcon: const Icon(
-                              CupertinoIcons.lock_fill,
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                obscure ? CupertinoIcons.eye_solid : CupertinoIcons.eye_slash_fill,
-                                color: obscure ? Colors.grey[500] : Theme.of(context).primaryColor,
-                              ),
-                              onPressed: (){
-                                setState(() {
-                                  obscure = !obscure;
-                                });
-                              }, 
-                            ),
-                            border: const OutlineInputBorder(),
-                            labelText: "Mot de passe ",
-                            labelStyle: Theme.of(context).textTheme.bodyMedium,
-                            hintText: "Entrez votre mot de passe",
-                            hintStyle: Theme.of(context).textTheme.bodyMedium,
-                            errorText: empty == true ? "Nom d'utulisateur obligatoire" : null
-                          ),
-                          onChanged: (newText) {
-                            setState(() {
-                              empty = false;
-                            });
-                          },
-                        ),
+                        // // Password
+                        // TextField(
+                        //   controller: _passwordController,
+                        //   obscureText: obscure,
+                        //   autofocus: false,
+                        //   textAlign: TextAlign.center,
+                        //   style: Theme.of(context).textTheme.bodyMedium,
+                        //   decoration: InputDecoration(
+                        //     prefixIconColor: Theme.of(context).primaryColor,
+                        //     prefixIcon: const Icon(
+                        //       CupertinoIcons.lock_fill,
+                        //     ),
+                        //     suffixIcon: IconButton(
+                        //       icon: Icon(
+                        //         obscure ? CupertinoIcons.eye_solid : CupertinoIcons.eye_slash_fill,
+                        //         color: obscure ? Colors.grey[500] : Theme.of(context).primaryColor,
+                        //       ),
+                        //       onPressed: (){
+                        //         setState(() {
+                        //           obscure = !obscure;
+                        //         });
+                        //       }, 
+                        //     ),
+                        //     border: const OutlineInputBorder(),
+                        //     labelText: "Mot de passe ",
+                        //     labelStyle: Theme.of(context).textTheme.bodyMedium,
+                        //     hintText: "Entrez votre mot de passe",
+                        //     hintStyle: Theme.of(context).textTheme.bodyMedium,
+                        //     errorText: empty == true ? "Nom d'utulisateur obligatoire" : null
+                        //   ),
+                        //   onChanged: (newText) {
+                        //     setState(() {
+                        //       empty = false;
+                        //     });
+                        //   },
+                        // ),
                       ],
                     ),
                   ),
@@ -187,89 +187,77 @@ class _LoginViewState extends State<LoginView> {
                       CupertinoButton(
                         color: Theme.of(context).primaryColor,
                         child: const Text('Se connercter'),
+                       
                         onPressed: () async {
 
-                          if (_usernameController.text.isEmpty || _passwordController.text.isEmpty) {
-                            String title = "Oups !";
-                            String content = "Veuillez remplir tous les champs.";
-                            showSimpleDialog(title, content);
-                            
-                          } else {
+                          setState(() {
+                            loading = true;
+                          });
+                          
+                          // Example WebID
+                          String myWebId = 'https://grafik.solidcommunity.net/profile/card#me';
 
-                            bool hasInternet = await InternetConnectionChecker().hasConnection;
+                          // Get issuer URI
+                          String issuerUri = await getIssuer(myWebId);
 
-                            if (hasInternet) {
-                              
-                              setState(() {
-                                loading = true;
-                              });
-                              
-                              Map<String, dynamic> authData = {
-                                "idp" : "https://solidcommunity.net",
-                                "username" : _usernameController.text,
-                                "password" : _passwordController.text
-                              }; 
+                          // Define scopes. Also possible scopes -> webid, email, api
+                          final List<String> scopes = <String>[
+                            'openid',
+                            'profile',
+                            'offline_access',
+                          ];
 
-                              Account acc = await accController.getAccount(authData);
+                          // Authentication process for the POD issuer
+                          var authData = await authenticate(Uri.parse(issuerUri), scopes, context);
 
-                              if (acc.username == 'null') {
-                                showSimpleDialog(
-                                  "Erreur !", 
-                                  "Verifiez les informations de votre POD."
-                                );
-                                setState(() {
-                                  loading = false;
-                                });
-                              } else {
+                          print("authData");
+                          print(authData);
 
-                                prefs!.setString("username", acc.username);
-                                prefs!.setString("password", acc.password);
-                                prefs!.setString("webId", acc.webId);
-                                prefs!.setBool("login", true);
+                          // Decode access token to recheck the WebID
+                          String accessToken = authData['accessToken'];
+                          Map<String, dynamic> decodedToken = JwtDecoder.decode(accessToken);
+                          String webId = decodedToken['webid'];
 
+                          String result = webId.replaceAll('/profile/card#me', '');
 
-                                debugPrint(acc.toString());
-                                showCupertinoDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return CupertinoAlertDialog(
-                                      title: const Text("Connecté"),
-                                      content: const Text("Authentification au POD avec succées"),
-                                      actions: [
-                                        CupertinoDialogAction(
-                                          child: Text(
-                                            "Continuer",
-                                            style: TextStyle(color: Theme.of(context).primaryColor),
-                                          ),
-                                          onPressed: ()
-                                          { 
+                          prefs!.setString("webId", result);
 
-                                            setState(() {
-                                              loading = false;
-                                            });
+                          setState(() {
+                            loading = false;
+                          });
 
-                                            Navigator.pop(context);
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) {
+                              return CupertinoAlertDialog(
+                                title: const Text("Authentification"),
+                                content: Column(
+                                  children: [
+                                    const Text("Votre Web ID :"),
+                                    Text(webId),
+                                  ],
+                                ),
+                                actions: [
 
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
-                                              (route) => false
-                                            );
-                                          }
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              }
-                            } else {
-                              showSimpleDialog(
-                                "Oups !", 
-                                "Verifiez votre connexion internet."
+                                  CupertinoDialogAction(
+                                    child: Text(
+                                      "Continuer",
+                                      style: TextStyle(color: Theme.of(context).primaryColor),
+                                    ),
+                                    onPressed: (){ 
+                                      Navigator.pop(context);
+                                      Navigator.pushAndRemoveUntil(
+                                        context, 
+                                        MaterialPageRoute(builder: (context)=> DashboardView(prefs: prefs!)),
+                                        (Route route) => false
+                                      );
+                                    }
+                                  ),
+                                ],
                               );
-                            }
-                          }
-                        },
+                            },
+                          );
+                        }
                       ),
 
                       const SizedBox(height: 30,),

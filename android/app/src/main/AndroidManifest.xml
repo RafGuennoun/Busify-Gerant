@@ -1,9 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.busify_gerant">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" /> 
+    <application
         android:label="Busify Gérant"
         android:name="${applicationName}"
-        android:icon="@mipmap/gerant">
+        android:icon="@mipmap/gerant"
+        android:usesCleartextTraffic="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"

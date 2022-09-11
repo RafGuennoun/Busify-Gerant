@@ -1,6 +1,6 @@
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
-import 'package:busify_gerant/views/newAccount_views/QRData.dart';
+import 'package:busify_gerant/views/Dashboard_view.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -302,7 +302,7 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                   : CupertinoButton(
                     color: Theme.of(context).primaryColor,
                     child: const Text('Conituer'),
-                    onPressed: () {
+                    onPressed: () async {
 
                       if (
                         _nomController.text.isEmpty ||
@@ -333,23 +333,59 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                           "activity" : "1",
                         };
 
-                        // prefs!.setBool('bus', true);
-                        // prefs!.setInt('active', 1);
+                        prefs!.setBool('bus', true);
+                        prefs!.setInt('active', 1);
 
-                        // ignore: use_build_context_synchronously
-                        // Navigator.pushAndRemoveUntil(
-                        //   context,
-                        //   MaterialPageRoute(builder: ((context) => DashboardView(prefs: prefs!,))),
-                        //   ((Route route) => false)
-                        // );
+                        bool addBus = await busController.updateBus({
+                          "login" :  {
+                            "idp" : "https://solidcommunity.net",
+                            "username" : "bus1",
+                            "password" : "bus1123456" 
+                          },
+                          "webId" : "https://bus1.solidcommunity.net",
+                          "bus" : bus
+                        });
 
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => QRData(
-                            webId: widget.data["webId"], 
-                            bus: bus, 
-                            driver: driver
-                          ))
+                        print("add bus = $addBus");
+
+                        bool addDriver = await driverController.updateDriver ({
+                          "login" :  {
+                            "idp" : "https://solidcommunity.net",
+                            "username" : "bus1",
+                            "password" : "bus1123456" 
+                          },
+                          "webId" : "https://bus1.solidcommunity.net",
+                          "driver" : driver
+                        });
+
+                        print("add driver = $addDriver");
+
+                        prefs!.setBool('bus', true);
+                        prefs!.setInt('active', 1);
+
+                        showCupertinoDialog(
+                          context: context,
+                          builder: (context) {
+                            return CupertinoAlertDialog(
+                              title: const Text("Seccués"),
+                              content: const Text("Votre bus a été ajouté."),
+                              actions: [
+                                CupertinoButton(
+                                  child: const Text("Continuer"), 
+                                  onPressed: (){
+                                    setState(() {
+                                      loading = false;
+                                    });
+                                    Navigator.pushAndRemoveUntil(
+                                      context, 
+                                      MaterialPageRoute(builder: (context) => DashboardView(prefs: prefs!)), 
+                                      (route) => false
+                                    );
+                                  }
+                                )
+                              ],
+                            );
+                          }
                         );
 
                         

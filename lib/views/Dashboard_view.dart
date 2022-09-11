@@ -163,9 +163,41 @@ class _DashboardViewState extends State<DashboardView> {
                         "Ajouter bus",
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      onTap: () {
+                      onTap: () async {
 
                         String webId = prefs!.getString("webId")!; 
+                        // ignore: use_build_context_synchronously
+                        Map<String, dynamic> json =  {
+                          "login" :  {
+                            "idp" : "https://solidcommunity.net",
+                            "username" : "bus1",
+                            "password" : "bus1123456" 
+                          },
+                          "webId" : "https://bus1.solidcommunity.net",
+                          "bus" : {
+                            "nom" : "",
+                            "matricule" : "",
+                            "marque" : "",
+                            "line" : "",
+                            "activity" : "0"
+                          },
+                          "driver" : {
+                            "nom" : "",
+                            "prenom" : "",
+                            "birthday" : "",
+                            "id" : ""
+                          },
+                          "location" : {
+                            "lat" : "",
+                            "lon" : "",
+                            "track" : ""  
+                          }
+                        };
+
+                        bool init = await busController.init(json);
+
+                        print("init");
+
                         // ignore: use_build_context_synchronously
                         Navigator.pop(context);
 
@@ -614,10 +646,10 @@ class _DashboardViewState extends State<DashboardView> {
                                     "qr" : {
                                       "login" : {
                                           "idp" : "https://solidcommunity.net",
-                                          "username" : prefs!.getString("username"),
-                                          "password" : prefs!.getString("password") 
+                                          "username" : "bus1",
+                                          "password" : "bus1123456" 
                                       },
-                                      "webId" : prefs!.getString("webId")
+                                      "webId" : "https://bus1.solidcommunity.net"
                                     }
                                   };
 
@@ -700,13 +732,13 @@ class _DashboardViewState extends State<DashboardView> {
 
                                                 Map<String, dynamic> login = {
                                                   "idp" : "https://solidcommunity.net",
-                                                  "username" : prefs!.getString('username'),
-                                                  "password" : prefs!.getString('password')
+                                                  "username" : "bus1",
+                                                  "password" : "bus1123456"
                                                 };
 
                                                 Map<String, dynamic> busData = {
                                                   "login" : login,
-                                                  "webId" : prefs!.getString('webId'),
+                                                  "webId" : "https://bus1.solidcommunity.net",
                                                   "bus" : {
                                                     "nom" : bus.name,
                                                     "marque" : bus.marque,
@@ -716,7 +748,13 @@ class _DashboardViewState extends State<DashboardView> {
                                                   }
                                                 };
 
+                                                Map<String, dynamic> webId = {
+                                                  "webId" : "https://bus1.solidcommunity.net"
+                                                };
+
                                                 await busController.updateBus(busData);
+
+                                                await busController.addBus(webId);
 
                                                 prefs!.setInt('active', 1);
 
@@ -784,7 +822,13 @@ class _DashboardViewState extends State<DashboardView> {
 
                                                 };
 
+                                                Map<String, dynamic> webId = {
+                                                  "webId" : "https://bus1.solidcommunity.net"
+                                                };
+
                                                 await busController.updateBus(busData);
+
+                                                await busController.removeBus(webId);
 
                                                 prefs!.setInt('active', 0);
 

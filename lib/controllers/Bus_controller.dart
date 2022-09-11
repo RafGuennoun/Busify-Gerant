@@ -55,6 +55,22 @@ class BusController{
     }
   }
 
+  Future<bool> removeBus(Map<String, dynamic> json) async {
+    Response response;
+    var dio = Dio();
+    response = await dio.post(
+      "${api}bus/remove", 
+      data: json
+    );
+
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      debugPrint(response.statusCode.toString());
+      throw Exception('Failed to add bus');
+    }
+  }
+
   Future<bool> updateBus(Map<String, dynamic> json) async {
     Response response;
     var dio = Dio();

@@ -1,5 +1,7 @@
+
 import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:busify_gerant/Widgets/SimpleAlertDialog.dart';
+import 'package:busify_gerant/controllers/Account_controller.dart';
 import 'package:busify_gerant/controllers/Bus_controller.dart';
 import 'package:busify_gerant/controllers/Driver_controller.dart';
 import 'package:busify_gerant/models/Bus_model.dart';
@@ -7,6 +9,7 @@ import 'package:busify_gerant/models/Driver_model.dart';
 import 'package:busify_gerant/views/BusInfos_view.dart';
 import 'package:busify_gerant/views/DriverInfos_view.dart';
 import 'package:busify_gerant/views/LineInfos_view.dart';
+import 'package:busify_gerant/views/Login_view.dart';
 import 'package:busify_gerant/views/QRview.dart';
 import 'package:busify_gerant/views/newAccount_views/AddLine_view.dart';
 import 'package:busify_gerant/widgets/Loading.dart';
@@ -50,6 +53,8 @@ class _DashboardViewState extends State<DashboardView> {
   }
 
   bool loading = false;
+
+  AccountController accountController = AccountController();
 
   @override
   initState(){
@@ -586,9 +591,88 @@ class _DashboardViewState extends State<DashboardView> {
                                     "Vous devez d'abord ajouter votre bus"
                                   );
                                 } else {
-                                  showSimpleDialog(
-                                    "Attention !",
-                                    "Cela va supprimer toutes vos données"
+                                  showCupertinoDialog(
+                                    context: context, 
+                                    builder: (context) {
+                                      return CupertinoAlertDialog(
+                                        title: const Text("Attention"),
+                                        content: const Text("Tout vos données seront supprimées"),
+                                        actions: [
+                                          CupertinoButton(
+                                            child: const Text("Supprimer"), 
+                                            onPressed: () async {
+
+                                              setState(() {
+                                                loading = true;
+                                              });
+
+                                              Map<String, dynamic> locationfile = { 
+                                                "idp" : "https://solidcommunity.net",
+                                                "username" : "bus1",
+                                                "password" : "bus1123456",
+                                                "folder" : "public/PFE",
+                                                "file" :  "location.ttl"  
+                                              };
+                                              bool location = await accountController.deleteFile(locationfile);
+
+                                               Map<String, dynamic> driverfile = { 
+                                                "idp" : "https://solidcommunity.net",
+                                                "username" : "bus1",
+                                                "password" : "bus1123456",
+                                                "folder" : "public/PFE",
+                                                "file" :  "driver.ttl"  
+                                              };
+                                              bool driver = await accountController.deleteFile(driverfile);
+
+                                              Map<String, dynamic> busfile = { 
+                                                "idp" : "https://solidcommunity.net",
+                                                "username" : "bus1",
+                                                "password" : "bus1123456",
+                                                "folder" : "public/PFE",
+                                                "file" :  "bus.ttl"  
+                                              };
+                                              bool bus = await accountController.deleteFile(busfile);
+
+                                              Map<String, dynamic> pfefile = { 
+                                                "idp" : "https://solidcommunity.net",
+                                                "username" : "bus1",
+                                                "password" : "bus1123456",
+                                                "folder" : "public/PFE",
+                                                "file" :  ""  
+                                              };
+                                              bool pfe = await accountController.deleteFile(pfefile);
+
+                                              prefs!.setBool('bus', false);
+                                              prefs!.setInt('active', 0);
+                                              
+                                              print("$location / $driver / $bus / $pfe");
+
+                                              setState(() {
+                                                loading = false;
+                                              });
+
+                                              // ignore: use_build_context_synchronously
+                                              Navigator.pop(context);
+
+                                              // ignore: use_build_context_synchronously
+                                              Navigator.pushAndRemoveUntil(
+                                                context, 
+                                                MaterialPageRoute(builder: (context) => const LoginView()), 
+                                                (route) => false
+                                              );
+
+                                            }
+                                          ),
+
+                                           CupertinoButton(
+                                            child: const Text("Annuler"), 
+                                            onPressed: (){
+                                              Navigator.pop(context);
+                                            }
+                                          )
+                                        ],
+                                      );
+                                    }
                                   );
                                 } 
                               },
@@ -910,60 +994,6 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                   ),
-    
-                  // Padding(
-                  //   padding: const EdgeInsets.only(top: 10 ),
-                  //   child: SizedBox(
-                  //     child: CupertinoButton(
-                  //       color: Theme.of(context).primaryColor,
-                  //       child: const Text("Supprimer le compte"), 
-                  //       onPressed: (){
-    
-                  //         showCupertinoDialog(
-                  //           context: context,
-                  //           builder: (context) {
-                  //             return CupertinoAlertDialog(
-                  //               title: const Text("Attention"),
-                  //               content: const Text("Cela va supprimere toutes vos données"),
-                  //               actions: [
-    
-                  //                 CupertinoDialogAction(
-                  //                   child: Text(
-                  //                     "Annuler",
-                  //                     style: TextStyle(color: Theme.of(context).primaryColor),
-                  //                   ),
-                  //                   onPressed: (){ 
-                  //                     Navigator.pop(context);
-                  //                   }
-                  //                 ),
-                  //                 CupertinoDialogAction(
-                  //                   child: Text(
-                  //                     "Supprimer",
-                  //                     style: TextStyle(color: Theme.of(context).primaryColor),
-                  //                   ),
-                  //                   onPressed: (){ 
-                  //                     prefs!.remove('username');
-                  //                     prefs!.remove('password');
-                  //                     prefs!.remove('webId');
-                  //                     prefs!.remove('line');
-    
-                  //                     Navigator.pop(context);
-                  //                     Navigator.pop(context);
-                  //                     Navigator.pop(context);
-                                     
-    
-                  //                   }
-                  //                 ),
-                  //               ],
-                  //             );
-                  //           },
-                  //         );
-                  //       }
-                  //     ),
-                  //   ),
-                  // )
-    
-                  
     
                 ],
               ),

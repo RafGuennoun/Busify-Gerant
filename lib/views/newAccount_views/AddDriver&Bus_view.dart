@@ -319,6 +319,10 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
                         
                       } else {
 
+                        setState(() {
+                          loading = true;
+                        });
+
                         Map<String, dynamic> driver = {  
                           "nom" :  _nomController.text,
                           "prenom" : _prenomController.text,
@@ -362,6 +366,10 @@ class _AddDriverAndBusState extends State<AddDriverAndBus> {
 
                         prefs!.setBool('bus', true);
                         prefs!.setInt('active', 1);
+
+                        setState(() {
+                          loading = false;
+                        });
 
                         showCupertinoDialog(
                           context: context,

@@ -136,7 +136,6 @@ class MyApp extends StatelessWidget {
         )
       ),
 
-
       builder: (theme, darkTheme) => MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Busify Gérant',

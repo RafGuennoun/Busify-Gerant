@@ -27,28 +27,23 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
   List infos = [
     {
-      "title" : "Page 1",
-      "body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum turpis eget orci aliquet malesuada.",
-      "image" : "assets/me.jpg"
+      "title" : "Busify Gérant",
+      "body" : "Cette application permet aux gérants de bus de manipuler les différentes données ",
+      "image" : "assets/gerant.png"
     },
 
     {
-      "title" : "Page 2",
-      "body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum turpis eget orci aliquet malesuada.",
-      "image" : "assets/me.jpg"
+      "title" : "Données géographiques",
+      "body" : "Cette application utilise Openstreetmap comme outil pour récupérer les coordonnées géographiques.",
+      "image" : "assets/osm_logo.png"
     },
 
     {
-      "title" : "Page 3",
-      "body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum turpis eget orci aliquet malesuada.",
-      "image" : "assets/me.jpg"
+      "title" : "Stockage de données",
+      "body" : "L'application utilise la plateforme Solid pour une meilleure sécurité et propriété de données.",
+      "image" : "assets/solid_logo.png"
     },
 
-    {
-      "title" : "Page 4",
-      "body" : "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus condimentum turpis eget orci aliquet malesuada.",
-      "image" : "assets/me.jpg"
-    }
   ]; 
 
 
@@ -57,7 +52,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
 
     Widget buildImage(String path){
       return Center(
-        child: Image.asset(path, width: 350,) ,
+        child: Image.asset(path, width: 250,) ,
       );
     }
 
@@ -85,7 +80,7 @@ class _IntroductionPageState extends State<IntroductionPage> {
       return DotsDecorator(
         color: Colors.grey,
         size: const Size(10,10),
-        activeColor: Colors.amber,
+        activeColor: Colors.blue,
         activeSize: const Size(25, 10),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24)
@@ -100,30 +95,23 @@ class _IntroductionPageState extends State<IntroductionPage> {
           PageViewModel(
             title: infos[0]['title'],
             body: infos[0]['body'],
-            // image: buildImage(infos[0]['image']),
+            image: buildImage(infos[0]['image']),
             decoration: getPageDecoration()
           ), 
 
           PageViewModel(
             title: infos[1]['title'],
             body: infos[1]['body'],
-            // image: buildImage(infos[1]['image']),
+            image: buildImage(infos[1]['image']),
             decoration: getPageDecoration()
           ), 
 
           PageViewModel(
             title: infos[2]['title'],
             body: infos[2]['body'],
-            // image: buildImage(infos[2]['image']),
+            image: buildImage(infos[2]['image']),
             decoration: getPageDecoration()
           ), 
-
-          PageViewModel(
-            title: infos[3]['title'],
-            body: infos[3]['body'],
-            // image: buildImage(infos[3]['image']),
-            decoration: getPageDecoration()
-          ),
 
           
 
@@ -143,9 +131,9 @@ class _IntroductionPageState extends State<IntroductionPage> {
         skip: const Text(
           "Skip",
           style: TextStyle(
-            color: Colors.blueGrey,
-            // fontSize: 18,
-            // fontWeight: FontWeight.bold
+            color: Colors.grey,
+            fontSize: 16,
+            fontFamily: 'Poppins',
           ),
         ),
         dotsDecorator: getDotsDecoration(),

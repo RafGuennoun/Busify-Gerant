@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:busify_gerant/utils/PDFGeneration/PDFGeneration.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -14,6 +15,9 @@ class QRView extends StatefulWidget {
 }
 
 class _QRViewState extends State<QRView> {
+
+  
+
 
   @override
   Widget build(BuildContext context) {
@@ -74,9 +78,10 @@ class _QRViewState extends State<QRView> {
                     color: Theme.of(context).primaryColor,
                     child: const Text("Telecharger"),
                     onPressed: (){
-                      
+                      writhsmth(jsonEncode(widget.data));
                     }
                   ),
+
                 ],
 
               ),

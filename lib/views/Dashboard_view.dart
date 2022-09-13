@@ -165,6 +165,13 @@ class _DashboardViewState extends State<DashboardView> {
                       ),
                       onTap: () async {
 
+                        // ignore: use_build_context_synchronously
+                        Navigator.pop(context);
+
+                        setState(() {
+                          loading = true;
+                        });
+
                         String webId = prefs!.getString("webId")!; 
                         // ignore: use_build_context_synchronously
                         Map<String, dynamic> json =  {
@@ -198,8 +205,10 @@ class _DashboardViewState extends State<DashboardView> {
 
                         print("init");
 
-                        // ignore: use_build_context_synchronously
-                        Navigator.pop(context);
+                        setState(() {
+                          loading = false;
+                        });
+                      
 
                         // ignore: use_build_context_synchronously
                         Navigator.push(

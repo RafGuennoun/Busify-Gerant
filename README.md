@@ -1,16 +1,14 @@
-# busify_gerant
+# Busify Gérant
+Une application cross-platform (Android et IOS) utilisée par les gérants de bus pour gérer les informations de leurs bus tels que la ligne de transport.
 
-A new Flutter project.
+## Projet de fin d'études Master 
+Dans le cadre du projet de fin d'études du **Master Ingénierie du Logiciel** à l'Université des Sciences et de la Technologie Houari Boumediene (USTHB).
 
-## Getting Started
+### Titre du projet : 
+Un écosystème décentralisé pour l’assistance des voyageurs dans les transports en commun.
 
-This project is a starting point for a Flutter application.
+### Sujet proposé : 
+Mr BOUBENIA Mohamed.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
